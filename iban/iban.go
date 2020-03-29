@@ -117,9 +117,10 @@ var countries = map[string]CountrySettings{
 	"XK": CountrySettings{Length: 20, Format: "F04F10F02"},
 }
 
-func validateCheckDigits(iban string) error {
+func (i *IBAN)validateCheckDigits() error {
 	// Move the four initial characters to the end of the string
-	iban = iban[4:] + iban[:4]
+	iban := i.Code[4:] + i.Code[:4]
+	//iban = iban[4:] + iban[:4]
 
 	// Replace each letter in the string with two digits, thereby expanding the string, where A = 10, B = 11, ..., Z = 35
 	mods := ""
@@ -263,7 +264,7 @@ func NewIBAN(s string) (*IBAN, error) {
 	}
 
 	// Validate check digits with mod97
-	err = validateCheckDigits(iban.Code)
+	err = iban.validateCheckDigits()
 	if err != nil {
 		return nil, err
 	}
