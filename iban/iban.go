@@ -16,6 +16,9 @@ type CountrySettings struct {
 
 	// Format of bban part of IBAN for this country
 	Format string
+
+	// Membership of country
+	Sepa bool
 }
 
 // IBAN struct
@@ -43,82 +46,82 @@ type IBAN struct {
 	Taken from http://www.tbg5-finance.org/ code example
 */
 var countries = map[string]CountrySettings{
-	"AD": CountrySettings{Length: 24, Format: "F04F04A12"},
-	"AE": CountrySettings{Length: 23, Format: "F03F16"},
-	"AL": CountrySettings{Length: 28, Format: "F08A16"},
-	"AT": CountrySettings{Length: 20, Format: "F05F11"},
-	"AZ": CountrySettings{Length: 28, Format: "U04A20"},
-	"BA": CountrySettings{Length: 20, Format: "F03F03F08F02"},
-	"BE": CountrySettings{Length: 16, Format: "F03F07F02"},
-	"BG": CountrySettings{Length: 22, Format: "U04F04F02A08"},
-	"BH": CountrySettings{Length: 22, Format: "U04A14"},
-	"BR": CountrySettings{Length: 29, Format: "F08F05F10U01A01"},
-	"CH": CountrySettings{Length: 21, Format: "F05A12"},
-	"CR": CountrySettings{Length: 21, Format: "F03F14"},
-	"CY": CountrySettings{Length: 28, Format: "F03F05A16"},
-	"CZ": CountrySettings{Length: 24, Format: "F04F06F10"},
-	"DE": CountrySettings{Length: 22, Format: "F08F10"},
-	"DK": CountrySettings{Length: 18, Format: "F04F09F01"},
-	"DO": CountrySettings{Length: 28, Format: "U04F20"},
-	"EE": CountrySettings{Length: 20, Format: "F02F02F11F01"},
-	"ES": CountrySettings{Length: 24, Format: "F04F04F01F01F10"},
-	"FI": CountrySettings{Length: 18, Format: "F06F07F01"},
-	"FO": CountrySettings{Length: 18, Format: "F04F09F01"},
-	"FR": CountrySettings{Length: 27, Format: "F05F05A11F02"},
-	"GB": CountrySettings{Length: 22, Format: "U04F06F08"},
-	"GE": CountrySettings{Length: 22, Format: "U02F16"},
-	"GI": CountrySettings{Length: 23, Format: "U04A15"},
-	"GL": CountrySettings{Length: 18, Format: "F04F09F01"},
-	"GR": CountrySettings{Length: 27, Format: "F03F04A16"},
-	"GT": CountrySettings{Length: 28, Format: "A04A20"},
-	"HR": CountrySettings{Length: 21, Format: "F07F10"},
-	"HU": CountrySettings{Length: 28, Format: "F03F04F01F15F01"},
-	"IE": CountrySettings{Length: 22, Format: "U04F06F08"},
-	"IL": CountrySettings{Length: 23, Format: "F03F03F13"},
-	"IS": CountrySettings{Length: 26, Format: "F04F02F06F10"},
-	"IT": CountrySettings{Length: 27, Format: "U01F05F05A12"},
-	"JO": CountrySettings{Length: 30, Format: "U04F04A18"},
-	"KW": CountrySettings{Length: 30, Format: "U04A22"},
-	"KZ": CountrySettings{Length: 20, Format: "F03A13"},
-	"LB": CountrySettings{Length: 28, Format: "F04A20"},
-	"LC": CountrySettings{Length: 32, Format: "U04A24"},
-	"LI": CountrySettings{Length: 21, Format: "F05A12"},
-	"LT": CountrySettings{Length: 20, Format: "F05F11"},
-	"LU": CountrySettings{Length: 20, Format: "F03A13"},
-	"LV": CountrySettings{Length: 21, Format: "U04A13"},
-	"MC": CountrySettings{Length: 27, Format: "F05F05A11F02"},
-	"MD": CountrySettings{Length: 24, Format: "A20"},
-	"ME": CountrySettings{Length: 22, Format: "F03F13F02"},
-	"MK": CountrySettings{Length: 19, Format: "F03A10F02"},
-	"MR": CountrySettings{Length: 27, Format: "F05F05F11F02"},
-	"MT": CountrySettings{Length: 31, Format: "U04F05A18"},
-	"MU": CountrySettings{Length: 30, Format: "U04F02F02F12F03U03"},
-	"NL": CountrySettings{Length: 18, Format: "U04F10"},
-	"NO": CountrySettings{Length: 15, Format: "F04F06F01"},
-	"PK": CountrySettings{Length: 24, Format: "U04A16"},
-	"PL": CountrySettings{Length: 28, Format: "F08F16"},
-	"PS": CountrySettings{Length: 29, Format: "U04A21"},
-	"PT": CountrySettings{Length: 25, Format: "F04F04F11F02"},
-	"QA": CountrySettings{Length: 29, Format: "U04A21"},
-	"RO": CountrySettings{Length: 24, Format: "U04A16"},
-	"RS": CountrySettings{Length: 22, Format: "F03F13F02"},
-	"SA": CountrySettings{Length: 24, Format: "F02A18"},
-	"SC": CountrySettings{Length: 31, Format: "U04F02F02F16U03"},
-	"SE": CountrySettings{Length: 24, Format: "F03F16F01"},
-	"SI": CountrySettings{Length: 19, Format: "F05F08F02"},
-	"SK": CountrySettings{Length: 24, Format: "F04F06F10"},
-	"SM": CountrySettings{Length: 27, Format: "U01F05F05A12"},
-	"ST": CountrySettings{Length: 25, Format: "F08F11F02"},
-	"TL": CountrySettings{Length: 23, Format: "F03F14F02"},
-	"TN": CountrySettings{Length: 24, Format: "F02F03F13F02"},
-	"TR": CountrySettings{Length: 26, Format: "F05A01A16"},
-	"UA": CountrySettings{Length: 29, Format: "F06A19"},
-	"VG": CountrySettings{Length: 24, Format: "U04F16"},
-	"XK": CountrySettings{Length: 20, Format: "F04F10F02"},
+	"AD": CountrySettings{Length: 24, Format: "F04F04A12", 		Sepa: false},
+	"AE": CountrySettings{Length: 23, Format: "F03F16", 		Sepa: false},
+	"AL": CountrySettings{Length: 28, Format: "F08A16", 		Sepa: false}, //8!n16!c
+	"AT": CountrySettings{Length: 20, Format: "F05F11", 		Sepa: true},
+	"AZ": CountrySettings{Length: 28, Format: "U04A20", 		Sepa: false},
+	"BA": CountrySettings{Length: 20, Format: "F03F03F08F02", 	Sepa: false},
+	"BE": CountrySettings{Length: 16, Format: "F03F07F02", 		Sepa: true},
+	"BG": CountrySettings{Length: 22, Format: "U04F04F02A08", 	Sepa: true},
+	"BH": CountrySettings{Length: 22, Format: "U04A14", 		Sepa: false},
+	"BR": CountrySettings{Length: 29, Format: "F08F05F10U01A01", Sepa: false},
+	"CH": CountrySettings{Length: 21, Format: "F05A12", 		Sepa: true},
+	"CR": CountrySettings{Length: 21, Format: "F03F14", 		Sepa: false},
+	"CY": CountrySettings{Length: 28, Format: "F03F05A16", 		Sepa: false},
+	"CZ": CountrySettings{Length: 24, Format: "F04F06F10", 		Sepa: true},
+	"DE": CountrySettings{Length: 22, Format: "F08F10", 		Sepa: true},
+	"DK": CountrySettings{Length: 18, Format: "F04F09F01", 		Sepa: true},
+	"DO": CountrySettings{Length: 28, Format: "U04F20", 		Sepa: false},
+	"EE": CountrySettings{Length: 20, Format: "F02F02F11F01", 	Sepa: true},
+	"ES": CountrySettings{Length: 24, Format: "F04F04F01F01F10", Sepa: true},
+	"FI": CountrySettings{Length: 18, Format: "F06F07F01", 		Sepa: true},
+	"FO": CountrySettings{Length: 18, Format: "F04F09F01", 		Sepa: true},
+	"FR": CountrySettings{Length: 27, Format: "F05F05A11F02", 	Sepa: true},
+	"GB": CountrySettings{Length: 22, Format: "U04F06F08", 		Sepa:true},
+	"GE": CountrySettings{Length: 22, Format: "U02F16", 		Sepa:false},
+	"GI": CountrySettings{Length: 23, Format: "U04A15", 		Sepa:true},
+	"GL": CountrySettings{Length: 18, Format: "F04F09F01", 		Sepa:true},
+	"GR": CountrySettings{Length: 27, Format: "F03F04A16", 		Sepa:true},
+	"GT": CountrySettings{Length: 28, Format: "A04A20", 		Sepa:false},
+	"HR": CountrySettings{Length: 21, Format: "F07F10", 		Sepa:false},
+	"HU": CountrySettings{Length: 28, Format: "F03F04F01F15F01", Sepa:true},
+	"IE": CountrySettings{Length: 22, Format: "U04F06F08", 		Sepa:true},
+	"IL": CountrySettings{Length: 23, Format: "F03F03F13", 		Sepa:false},
+	"IS": CountrySettings{Length: 26, Format: "F04F02F06F10", 	Sepa:true},
+	"IT": CountrySettings{Length: 27, Format: "U01F05F05A12", 	Sepa:true},
+	"JO": CountrySettings{Length: 30, Format: "U04F04A18", 		Sepa:false},
+	"KW": CountrySettings{Length: 30, Format: "U04A22", 		Sepa:false},
+	"KZ": CountrySettings{Length: 20, Format: "F03A13", 		Sepa:false},
+	"LB": CountrySettings{Length: 28, Format: "F04A20", 		Sepa:false},
+	"LC": CountrySettings{Length: 32, Format: "U04A24", 		Sepa:false},
+	"LI": CountrySettings{Length: 21, Format: "F05A12", 		Sepa:true},
+	"LT": CountrySettings{Length: 20, Format: "F05F11", 		Sepa:true},
+	"LU": CountrySettings{Length: 20, Format: "F03A13", 		Sepa:true},
+	"LV": CountrySettings{Length: 21, Format: "U04A13", 		Sepa:true},
+	"MC": CountrySettings{Length: 27, Format: "F05F05A11F02", 	Sepa:true},
+	"MD": CountrySettings{Length: 24, Format: "A20", 			Sepa:false},
+	"ME": CountrySettings{Length: 22, Format: "F03F13F02", 		Sepa:false},
+	"MK": CountrySettings{Length: 19, Format: "F03A10F02", 		Sepa:false},
+	"MR": CountrySettings{Length: 27, Format: "F05F05F11F02", 	Sepa:false},
+	"MT": CountrySettings{Length: 31, Format: "U04F05A18", 		Sepa:true},
+	"MU": CountrySettings{Length: 30, Format: "U04F02F02F12F03U03", Sepa:false},
+	"NL": CountrySettings{Length: 18, Format: "U04F10", 		Sepa:true},
+	"NO": CountrySettings{Length: 15, Format: "F04F06F01", 		Sepa:true},
+	"PK": CountrySettings{Length: 24, Format: "U04A16", 		Sepa:false},
+	"PL": CountrySettings{Length: 28, Format: "F08F16", 		Sepa:true},
+	"PS": CountrySettings{Length: 29, Format: "U04A21", 		Sepa:false},
+	"PT": CountrySettings{Length: 25, Format: "F04F04F11F02", 	Sepa:true},
+	"QA": CountrySettings{Length: 29, Format: "U04A21", 		Sepa:false},
+	"RO": CountrySettings{Length: 24, Format: "U04A16", 		Sepa:true},
+	"RS": CountrySettings{Length: 22, Format: "F03F13F02", 		Sepa:false},
+	"SA": CountrySettings{Length: 24, Format: "F02A18", 		Sepa:false},
+	"SC": CountrySettings{Length: 31, Format: "U04F02F02F16U03", Sepa:false},
+	"SE": CountrySettings{Length: 24, Format: "F03F16F01", 		Sepa:true},
+	"SI": CountrySettings{Length: 19, Format: "F05F08F02", 		Sepa:true},
+	"SK": CountrySettings{Length: 24, Format: "F04F06F10", 		Sepa:true},
+	"SM": CountrySettings{Length: 27, Format: "U01F05F05A12", 	Sepa:true},
+	"ST": CountrySettings{Length: 25, Format: "F08F11F02", 		Sepa:false},
+	"TL": CountrySettings{Length: 23, Format: "F03F14F02", 		Sepa:false},
+	"TN": CountrySettings{Length: 24, Format: "F02F03F13F02", 	Sepa:false},
+	"TR": CountrySettings{Length: 26, Format: "F05A01A16", 		Sepa:false},
+	"UA": CountrySettings{Length: 29, Format: "F06A19", 		Sepa:false},
+	"VG": CountrySettings{Length: 24, Format: "U04F16", 		Sepa:false},
+	"XK": CountrySettings{Length: 20, Format: "F04F10F02", 		Sepa:false},
 }
 
 func (i *IBAN)Validate() (error) {
-	err1 := i.validateBasicBankAccountNumber()
+	err1 := i.validateBban()
 	err2 := i.validateCheckDigits()
 	err := ""
 	if err1 != nil {
@@ -133,6 +136,7 @@ func (i *IBAN)Validate() (error) {
 func (i *IBAN)PrintCode() string {
 	return i.printCode
 }
+
 
 func (i *IBAN)validateCheckDigits() error {
 	// Move the four initial characters to the end of the string
@@ -171,7 +175,7 @@ func (i *IBAN)validateCheckDigits() error {
 	return nil
 }
 
-func (i *IBAN)validateBasicBankAccountNumber() error {
+func (i *IBAN) validateBban() error {
 	bban := i.bban
 	format := i.countrySettings.Format
 
@@ -276,7 +280,7 @@ func NewIBAN(s string) (*IBAN, error) {
 	// Set and validate bban part, the part after the language code and check digits
 	iban.bban = s[4:]
 
-	err = iban.validateBasicBankAccountNumber()
+	err = iban.validateBban()
 	if err != nil {
 		return nil, err
 	}
