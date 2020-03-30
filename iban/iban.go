@@ -24,7 +24,7 @@ type IBAN struct {
 	Code string
 
 	// Full code prettyfied for printing on paper
-	PrintCode string
+	printCode string
 
 	// Country code
 	CountryCode string
@@ -117,11 +117,26 @@ var countries = map[string]CountrySettings{
 	"XK": CountrySettings{Length: 20, Format: "F04F10F02"},
 }
 
+func (i *IBAN)Validate() (error) {
+	err1 := i.validateBasicBankAccountNumber()
+	err2 := i.validateCheckDigits()
+	err := ""
+	if err1 != nil {
+		err = err + err1.Error()
+	}
+	if err2 != nil{
+		err = err + err2.Error()
+	}
+	return errors.New(err)
+}
+
+func (i *IBAN)PrintCode() string {
+	return i.printCode
+}
+
 func (i *IBAN)validateCheckDigits() error {
 	// Move the four initial characters to the end of the string
 	iban := i.Code[4:] + i.Code[:4]
-	//iban = iban[4:] + iban[:4]
-
 	// Replace each letter in the string with two digits, thereby expanding the string, where A = 10, B = 11, ..., Z = 35
 	mods := ""
 	for _, c := range iban {
@@ -156,7 +171,10 @@ func (i *IBAN)validateCheckDigits() error {
 	return nil
 }
 
-func validateBasicBankAccountNumber(bban string, format string) error {
+func (i *IBAN)validateBasicBankAccountNumber() error {
+	bban := i.BBAN
+	format := i.CountrySettings.Format
+
 	// Format regex to get parts
 	frx, err := regexp.Compile(`[ABCFLUW]\d{2}`)
 	if err != nil {
@@ -258,7 +276,7 @@ func NewIBAN(s string) (*IBAN, error) {
 	// Set and validate BBAN part, the part after the language code and check digits
 	iban.BBAN = s[4:]
 
-	err = validateBasicBankAccountNumber(iban.BBAN, iban.CountrySettings.Format)
+	err = iban.validateBasicBankAccountNumber()
 	if err != nil {
 		return nil, err
 	}
@@ -276,7 +294,7 @@ func NewIBAN(s string) (*IBAN, error) {
 		s = s[4:]
 	}
 
-	iban.PrintCode = prc + s
+	iban.printCode = prc + s
 
 	return &iban, nil
 }
