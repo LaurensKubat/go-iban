@@ -24,7 +24,7 @@ func TestFake(t *testing.T) {
 		iban, err := NewIBAN(fake)
 		if err == nil {
 			// Fake iban did not raise an error,
-			t.Errorf("IBAN fake test error: %v", iban.Code)
+			t.Errorf("IBAN fake test error: %v", iban.code)
 		}
 	}
 }
