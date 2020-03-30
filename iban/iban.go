@@ -9,34 +9,34 @@ import (
 	"strings"
 )
 
-// CountrySettings contains length for IBAN and format for BBAN
+// countrySettings contains length for IBAN and format for bban
 type CountrySettings struct {
 	// Length of IBAN code for this country
 	Length int
 
-	// Format of BBAN part of IBAN for this country
+	// Format of bban part of IBAN for this country
 	Format string
 }
 
 // IBAN struct
 type IBAN struct {
 	// Full code
-	Code string
+	code string
 
 	// Full code prettyfied for printing on paper
 	printCode string
 
 	// Country code
-	CountryCode string
+	countryCode string
 
 	// Check digits
-	CheckDigits string
+	checkDigits string
 
 	// Country settings
-	CountrySettings *CountrySettings
+	countrySettings *CountrySettings
 
 	// Country specific bban part
-	BBAN string
+	bban string
 }
 
 /*
@@ -136,7 +136,7 @@ func (i *IBAN)PrintCode() string {
 
 func (i *IBAN)validateCheckDigits() error {
 	// Move the four initial characters to the end of the string
-	iban := i.Code[4:] + i.Code[:4]
+	iban := i.code[4:] + i.code[:4]
 	// Replace each letter in the string with two digits, thereby expanding the string, where A = 10, B = 11, ..., Z = 35
 	mods := ""
 	for _, c := range iban {
@@ -172,13 +172,13 @@ func (i *IBAN)validateCheckDigits() error {
 }
 
 func (i *IBAN)validateBasicBankAccountNumber() error {
-	bban := i.BBAN
-	format := i.CountrySettings.Format
+	bban := i.bban
+	format := i.countrySettings.Format
 
 	// Format regex to get parts
 	frx, err := regexp.Compile(`[ABCFLUW]\d{2}`)
 	if err != nil {
-		return fmt.Errorf("Failed to validate BBAN: %v", err.Error())
+		return fmt.Errorf("Failed to validate bban: %v", err.Error())
 	}
 
 	// Get format part strings
@@ -208,21 +208,21 @@ func (i *IBAN)validateBasicBankAccountNumber() error {
 		// Get repeat factor for group
 		repeat, atoiErr := strconv.Atoi(ps[1:])
 		if atoiErr != nil {
-			return fmt.Errorf("Failed to validate BBAN: %v", atoiErr.Error())
+			return fmt.Errorf("Failed to validate bban: %v", atoiErr.Error())
 		}
 
 		// Add to regex
 		bbr += fmt.Sprintf("{%d}", repeat)
 	}
 
-	// Compile regex and validate BBAN
+	// Compile regex and validate bban
 	bbrx, err := regexp.Compile(bbr)
 	if err != nil {
-		return fmt.Errorf("Failed to validate BBAN: %v", err.Error())
+		return fmt.Errorf("Failed to validate bban: %v", err.Error())
 	}
 
 	if !bbrx.MatchString(bban) {
-		return errors.New("BBAN part of IBAN is not formatted according to country specification")
+		return errors.New("bban part of IBAN is not formatted according to country specification")
 	}
 
 	return nil
@@ -234,7 +234,7 @@ func NewIBAN(s string) (*IBAN, error) {
 
 	// Prepare string: remove spaces and convert to upper case
 	s = strings.ToUpper(strings.Replace(s, " ", "", -1))
-	iban.Code = s
+	iban.code = s
 
 	// Validate characters
 	r, err := regexp.Compile(`^[0-9A-Z]*$`)
@@ -257,24 +257,24 @@ func NewIBAN(s string) (*IBAN, error) {
 		return nil, errors.New("IBAN must start with country code (2 characters) and check digits (2 digits)")
 	}
 
-	iban.CountryCode = hs[0:2]
-	iban.CheckDigits = hs[2:4]
+	iban.countryCode = hs[0:2]
+	iban.checkDigits = hs[2:4]
 
 	// Get country settings for country code
-	cs, ok := countries[iban.CountryCode]
+	cs, ok := countries[iban.countryCode]
 	if !ok {
-		return nil, fmt.Errorf("Unsupported country code %v", iban.CountryCode)
+		return nil, fmt.Errorf("Unsupported country code %v", iban.countryCode)
 	}
 
-	iban.CountrySettings = &cs
+	iban.countrySettings = &cs
 
 	// Validate code length
 	if len(s) != cs.Length {
-		return nil, fmt.Errorf("IBAN length %d does not match length %d specified for country code %v", len(s), cs.Length, iban.CountryCode)
+		return nil, fmt.Errorf("IBAN length %d does not match length %d specified for country code %v", len(s), cs.Length, iban.countryCode)
 	}
 
-	// Set and validate BBAN part, the part after the language code and check digits
-	iban.BBAN = s[4:]
+	// Set and validate bban part, the part after the language code and check digits
+	iban.bban = s[4:]
 
 	err = iban.validateBasicBankAccountNumber()
 	if err != nil {
