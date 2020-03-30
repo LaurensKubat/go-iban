@@ -15,7 +15,7 @@ Test suite includes example of IBAN's for most countries and fake IBAN's. Errors
 
 	import (
 		"fmt"
-		"github.com/almerlucke/go-iban/iban"
+		"github.com/LaurensKubat/go-iban/iban"
 	)
 	
 	func main() {
@@ -24,7 +24,6 @@ Test suite includes example of IBAN's for most countries and fake IBAN's. Errors
 		if err != nil {
 			fmt.Printf("%v\n", err)
 		} else {
-			fmt.Printf("%v\n", iban.PrintCode)
-			fmt.Printf("%v\n", iban.Code)
+			fmt.Printf("%v\n", iban.PrintCode())
 		}
 	}
